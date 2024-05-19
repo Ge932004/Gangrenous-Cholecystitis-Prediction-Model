@@ -1,8 +1,8 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import subprocess
-subprocess.check_call(["pip", "install", "-i", "https://mirrors.aliyun.com/pypi/simple/", "shap"])
+import os
+os.system('conda install shap')
 import shap
 import matplotlib.pyplot as plt
 import joblib
