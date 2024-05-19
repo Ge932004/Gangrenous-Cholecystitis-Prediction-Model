@@ -4,7 +4,6 @@ import numpy as np
 import subprocess
 import subprocess
 subprocess.check_call(["pip", "install", "-i", "https://mirrors.aliyun.com/pypi/simple/", "shap"])
-import shap
 import matplotlib.pyplot as plt
 import joblib
 
