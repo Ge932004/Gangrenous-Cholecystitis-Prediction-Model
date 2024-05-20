@@ -16,6 +16,24 @@ X_background = df.drop('Gangrenous', axis=1).loc[indices]
 # Initialize the explainer with the background data
 explainer = shap.Explainer(model_xgb.predict, X_background)
 
+mean_values = {
+    "WBC": 9.16,
+    "NLR": 7.15,
+    "D_dimer": 0.84,
+    "Fibrinogen": 4.43,
+    "Gallbladder width": 3.33,
+    "Gallbladder wallness": 0.42
+}
+
+std_values = {
+    "WBC": 4.71,
+    "NLR": 8.77,
+    "D_dimer": 0.99,
+    "Fibrinogen": 1.69,
+    "Gallbladder width": 0.99,
+    "Gallbladder wallness": 0.16
+}
+
 st.header("Gangrenous Cholecystitis Prediction Model")
 WBC = st.number_input("WBC")
 NLR = st.number_input("NLR")
@@ -27,8 +45,16 @@ Hypokalemia_hyponatremia= st.number_input("Hypokalemia or hyponatremia")
 
 
 if st.button("Submit"):
-    X = pd.DataFrame([[WBC, NLR, D_dimer, Fibrinogen, Gallbladder_width, Gallbladder_wallness, Hypokalemia_hyponatremia]], 
-                     columns=["WBC", "NLR", "D-dimer", "Fibrinogen", "Gallbladder width","Gallbladder wallness","Hypokalemia or hyponatremia"])
+    WBC_std = (WBC - mean_values["WBC"]) / std_values["WBC"]
+    NLR_std = (NLR - mean_values["NLR"]) / std_values["NLR"]
+    D_dimer_std = (D_dimer - mean_values["D_dimer"]) / std_values["D_dimer"]
+    Fibrinogen_std = (Fibrinogen - mean_values["Fibrinogen"]) / std_values["Fibrinogen"]
+    Gallbladder_width_std = (Gallbladder_width - mean_values["Gallbladder width"]) / std_values["Gallbladder width"]
+    Gallbladder_wallness_std = (Gallbladder_wallness - mean_values["Gallbladder wallness"]) / std_values["Gallbladder wallness"]
+   
+    X = pd.DataFrame([[WBC_std, NLR_std, D_dimer_std, Fibrinogen_std, Gallbladder_width_std, Gallbladder_wallness_std, Hypokalemia_hyponatremia]], 
+                     columns=["WBC", "NLR", "D-dimer", "Fibrinogen", "Gallbladder width", "Gallbladder wallness", "Hypokalemia or hyponatremia"])
+
     
     shap_values = explainer(X)
     rounded_values = np.round(shap_values.values, 2)
